@@ -1,0 +1,14 @@
+.label vic2_interrupt_status_register=$d019
+.label border=$d020
+.label cia1_interrupt_control_register=$dc0d
+.label exiting_irq1=$8f3
+.label vic2_screen_control_register1=$d011
+.label vic2_screen_control_register2=$d016
+.label main=$80e
+.label vic2_rasterline_register=$d012
+.label cia2_interrupt_control_register=$dd0d
+.label background=$d021
+.label loop=$8a8
+.label irq1=$8ab {
+}
+.label vic2_interrupt_control_register=$d01a

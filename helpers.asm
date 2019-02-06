@@ -104,9 +104,13 @@ clear_next_char:
 
 .macro randomize_screen() {
   // Place some chars on screen memory.
-  ldx #0
-  lda #0
+  ldx #0 //column index
+  lda #0 // char index
 next_char:
+  cmp #32 //Skip the blank character..
+  bne ok
+  lda #33//..by using the next character code
+ok:
   .for (var row = 0; row < 25; row++) {
     sta screen + row * 40,x
   }
@@ -116,17 +120,22 @@ next_char:
   bne next_char
 
   // Place some colors in color memory.
-  ldx #0
-  lda #0
+  ldx #0 //column index
+  ldy #BLACK+1 //color index
+  lda #BLACK+1 //char color (numerically same as y)
 next_color:
   .for (var row = 0; row < 25; row++) {
     sta colorRam + row * 40,x
   }
+  iny
+  cpy #16
+  bne continue
+  ldy #BLACK+1
+continue:
+  tya
   inx
-  txa
   cpx #40
   bne next_color
-
 }
 
 .macro nops(count) {

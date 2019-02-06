@@ -9,7 +9,7 @@ Memory Map
 ----------
 Default-segment:
   $0801-$080c Basic
-  $080e-$0973 Basic End
+  $080e-$09b1 Basic End
 
 Writing Vice symbol file: C:\C64\Tools\KickAssembler\Mini_Projects\C64_Scrolling_PAL\bin\VSP.vs
 Writing Symbol file: bin\VSP.sym

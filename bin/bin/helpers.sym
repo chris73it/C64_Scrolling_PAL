@@ -1,0 +1,5 @@
+.label vic2_interrupt_status_register=$d019
+.label vic2_screen_control_register1=$d011
+.label vic2_screen_control_register2=$d016
+.label vic2_rasterline_register=$d012
+.label vic2_interrupt_control_register=$d01a

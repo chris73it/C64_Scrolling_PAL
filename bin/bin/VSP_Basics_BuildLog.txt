@@ -1,0 +1,15 @@
+parsing
+flex pass 1
+flex pass 2
+flex pass 3
+Output pass
+Writing prg file: C:\C64\Tools\KickAssembler\Mini_Projects\C64_Scrolling_PAL\bin\VSP_Basics_Compiled.prg
+
+Memory Map
+----------
+Default-segment:
+  $0801-$080c Basic
+  $080e-$0a7d Basic End
+
+Writing Vice symbol file: C:\C64\Tools\KickAssembler\Mini_Projects\C64_Scrolling_PAL\bin\VSP_Basics.vs
+Writing Symbol file: bin\VSP_Basics.sym

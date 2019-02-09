@@ -1,0 +1,21 @@
+.label vic2_interrupt_status_register=$d019
+.label cia1_interrupt_control_register=$dc0d
+.label exiting_irq1=$9b7
+.label vic2_screen_control_register1=$d011
+.label vic2_screen_control_register2=$d016
+.label left2rigth=$824
+.label main=$80e
+.label NDelay=$a00
+.label loop=$931
+.label border=$d020
+.label prep_screen=$828 {
+}
+.label scroll_left_to_right=$9ab
+.label vic2_rasterline_register=$d012
+.label ndelay=$98b
+.label cia2_interrupt_control_register=$dd0d
+.label background=$d021
+.label irq1=$934 {
+}
+.label finalize_scroll_dir=$826
+.label vic2_interrupt_control_register=$d01a

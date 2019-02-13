@@ -100,6 +100,18 @@ clear_next_char:
   sta screen_3,x
   inx
   bne clear_next_char
+
+  //Write 0..7 on the 1017th to 1024th bytes (the sprite pointers)
+  ldy #0
+  ldx #48 //PETSCII char code for number zero (0)
+  txa
+more_sprite_pointers:
+  sta 1024+1000+16,y
+  iny
+  inx
+  txa
+  cmp #48+8
+  bne more_sprite_pointers
 }
 
 .macro randomize_screen() {
@@ -111,7 +123,7 @@ next_char:
   bne ok
   lda #33//..by using the next character code
 ok:
-  .for (var row = 0; row < 25; row++) {
+  .for (var row = 0/*+1*/; row < 25+1/*-1*/; row++) {
     sta screen + row * 40,x
   }
   inx
@@ -119,12 +131,12 @@ ok:
   cpx #40
   bne next_char
 
-  // Place some colors in color memory.
+  // Place certain colors in color memory.
   ldx #0 //column index
   ldy #BLACK+1 //color index
   lda #BLACK+1 //char color (numerically same as y)
 next_color:
-  .for (var row = 0; row < 25; row++) {
+  .for (var row = 0; row < 25+1; row++) {
     sta colorRam + row * 40,x
   }
   iny

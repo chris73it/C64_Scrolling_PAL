@@ -46,7 +46,7 @@
     ora #%10000000
   } else {
     and #%01111111
-  } 
+  }
   sta vic2_screen_control_register1
 }
 
@@ -120,10 +120,10 @@ more_sprite_pointers:
   lda #0 // char index
 next_char:
   cmp #32 //Skip the blank character..
-  bne ok
+  bne !ok+
   lda #33//..by using the next character code
-ok:
-  .for (var row = 0/*+1*/; row < 25+1/*-1*/; row++) {
+!ok:
+  .for (var row = 0; row < 25+1; row++) {
     sta screen + row * 40,x
   }
   inx
@@ -140,10 +140,10 @@ next_color:
     sta colorRam + row * 40,x
   }
   iny
-  cpy #16
-  bne continue
-  ldy #BLACK+1
-continue:
+  cpy #16      //Next color is going to be BLACK..
+  bne !ok+
+  ldy #BLACK+1 //..skip it using the next color (WHITE)
+!ok:
   tya
   inx
   cpx #40

@@ -69,7 +69,6 @@ main:
     // that is because we use 0 in $ff to mean "right to left".
     lda #0 //By default we scroll right to left (so $ff will be 0)
     sta $FE
-//    sta $FD//Goes from 0 to 79 (2 full scrolls of the screen)
 //  cmp #0 //Right to left?
     beq finalize_scroll_dir 
 left2rigth:
@@ -78,7 +77,6 @@ finalize_scroll_dir:
     sta $FF
 
     //Prepare screen:
-    //clear_screen(32) //Clean all chars, including chars in the 1000-1023 range
     randomize_screen() //Fill up screen in the range 0-999 with letters
 
     lda $01
@@ -138,17 +136,14 @@ ndelay:
   // back to its default value 3, and we are ready for the next frame.
   lda #$1B  //(2, RL:48:(54-$FE+2))
   sta $D011 //(4, RL:48:(56-$FE+4) = RL:48:60-$FE)
-//:cycles(1000)
 exiting_irq1:
   asl vic2_interrupt_status_register
   :set_raster(RASTER_LINE+210/*-4*/) //RASTER_LINE is (48-1)-2 = 45
-//  :mov16 #irq1 : $fffe
   :mov16 #irq2 : $fffe
   rti
 
 irq2:
 //jmp exiting_irq2
-//inc border
   lda $FE
   cmp #24
   bcs from_24_to_39 //Accumulator >= 24?
@@ -157,7 +152,6 @@ from_0_to_23:
   jmp exiting_irq2
 from_24_to_39:
   jsr shift_column_24_39_down
-//dec border
 exiting_irq2:
   jsr make_screen_scroll
   asl vic2_interrupt_status_register
@@ -166,7 +160,6 @@ exiting_irq2:
   rti
 
 shift_column_0_23_down:
-inc border
   ldx $FE
   clc
   lda $FE
@@ -197,11 +190,9 @@ inc border
   sta $07C0,x //25th row
   sta $07E8,x //26th row
 exiting_shift_column_0_23_down:
-dec border
    rts
 
 shift_column_24_39_down:
-inc border
   ldx $FE
   clc
   lda $FE
@@ -244,11 +235,9 @@ inc border
   lda $D800,y
   sta $D800,x
 exiting_shift_column_24_39_down:
-dec border
    rts
 
 make_screen_scroll:
-//inc border
   lda $FF
 //  cmp #0 //right to left?
   bne scroll_left_to_right
@@ -267,7 +256,6 @@ scroll_left_to_right:
   lda #39
   sta $FE
 exiting_make_screen_scroll:
-//dec border
   rts
 
 screen_LSB_addr:

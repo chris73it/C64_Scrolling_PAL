@@ -90,46 +90,35 @@
   .return bits / 8
 }
 
-.macro clear_screen(char_code) {
-  ldx #0
-  lda #char_code
-clear_next_char:
-  sta screen_0,x
-  sta screen_1,x
-  sta screen_2,x
-  sta screen_3,x
-  inx
-  bne clear_next_char
 
-  //Write 0..7 on the 1017th to 1024th bytes (the sprite pointers)
-  ldy #0
-  ldx #48 //PETSCII char code for number zero (0)
-  txa
-more_sprite_pointers:
-  sta 1024+1000+16,y
-  iny
-  inx
-  txa
-  cmp #48+8
-  bne more_sprite_pointers
-}
-
-.macro randomize_screen() {
-  // Place some chars on screen memory.
-  ldx #0 //column index
-  lda #0 // char index
-next_char:
-  cmp #32 //Skip the blank character..
-  bne !ok+
-  lda #33//..by using the next character code
+//Place blank chars on the first ($0400) and the second ($2000) screen.
+.macro init_screen_ram() {
+  lda #32 //in PETSCII 32 is the character code for blank/whitespace
+  ldx #0  //column index
 !ok:
+  //We want to also initialize the 24 hidden bytes after the first
+  // normally visible 1000 bytes: we actually overflow by 16 bytes: this
+  // is ok since this demo is a proof of concept of how to implement VSP,
+  // but on a real game you should probably fix that.)
   .for (var row = 0; row < 25+1; row++) {
-    sta screen + row * 40,x
+    sta $0400 + row * 40,x
   }
   inx
-  txa
   cpx #40
-  bne next_char
+  bne !ok-
+
+  ldx #0  //column index
+!ok:
+  //We want to also initialize the 24 hidden bytes after the first
+  // normally visible 1000 bytes: we actually overflow by 16 bytes: this
+  // is ok since this demo is a proof of concept of how to implement VSP,
+  // but on a real game you should probably fix that.)
+  .for (var row = 0; row < 25+1; row++) {
+    sta $2000 + row * 40,x
+  }
+  inx
+  cpx #40
+  bne !ok-
 
   // Place certain colors in color memory.
   ldx #0 //column index
@@ -140,9 +129,14 @@ next_color:
     sta colorRam + row * 40,x
   }
   iny
-  cpy #16      //Next color is going to be BLACK..
+  cpy #8+1 //We only use 8 colors, because 8 divides both 16 and 24
+           // and we do not need to bend head over hills just to make
+           // this demo look right (the gosl here is to show how VSP
+           // works, and not implement a full blown scroller: said that
+           // it should be easy to add a tiler system for the new
+           // graphics that enters from the right side of the screen.)
   bne !ok+
-  ldy #BLACK+1 //..skip it using the next color (WHITE)
+  ldy #BLACK+1 //roll back to WHITE
 !ok:
   tya
   inx

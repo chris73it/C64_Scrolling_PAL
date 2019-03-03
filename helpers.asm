@@ -90,6 +90,48 @@
   .return bits / 8
 }
 
+//Clears the screen using the blank (' ') character.
+//Notice that we also clean up the extra 24 bytes after the first 1000,
+//in fact, we even clean up 16 extra chatacters: this is done for
+//simplicity, but on production code you should probably refrain from
+//cleaning up those 16 bytes as well.
+.macro clear_screen(filler) {
+  lda #filler //PETSCII for blank (' ') character
+  ldx #0  //column index
+repeat:
+  .for (var row = 0; row < 25+1; row++) {
+    sta screen + row * 40, x
+  }
+  inx
+  cpx #40
+  bne repeat
+}
+
+.macro randomize_screen() {
+  //randomize character codes
+  ldx #0  //column index
+!repeat: //The exclamation point is necessary because 'repeat' is a duplicated label
+  txa
+  adc #33 //33 is the PETSCII char code for exclamation point '!' character
+  .for (var row = 0; row < 25+1; row++) {
+    sta screen + row * 40, x
+  }
+  inx
+  cpx #40
+  bne !repeat- //The minus means "go to the previous 'repeat' label"
+
+  //randomize colors
+  ldx #0  //column index
+!repeat: //The exclamation point is necessary because 'repeat' is a duplicated label
+  txa
+  adc #33 //33 is the PETSCII char code for exclamation point '!' character
+  .for (var row = 0; row < 25+1; row++) {
+    sta colorRam + row * 40, x
+  }
+  inx
+  cpx #40
+  bne !repeat- //The minus means "go to the previous 'repeat' label"
+}
 
 //Place blank chars on the first ($0400) and the second ($2000) screen.
 .macro init_screen_ram() {
